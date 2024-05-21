@@ -5,7 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\api\Validator;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Categoria;
 
 class CategoriaController extends Controller
@@ -55,7 +55,7 @@ class CategoriaController extends Controller
     {
         $validate = Validator::make($request->all(), [
             'nombre'=> ['required', 'max:30', 'unique'],
-            'descripcion'=> ['required','max:50','unique'],
+            'descripcion'=> ['nullable'],
         ]);
         if($validate->fails()){
             return response()->json([
