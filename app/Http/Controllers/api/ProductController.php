@@ -39,6 +39,9 @@ class ProductController extends Controller
     public function show(string $id)
     {
         $product = Product::find($id);
+        if(is_null($product)) {
+            return abort(404);  
+        }
         $product = DB::table('produts')
         ->orderBy('names')
         ->orderBy('price')
@@ -52,6 +55,19 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $validate = Validator::make($request->all(), [
+            'name'=> ['required', 'max:30', 'unique'],
+            'price'=> ['required','max:50','unique'],
+            'stock'=> ['required','max:30','unique'],
+            'categoria_id' => ['required','max30','unique'],
+        ]);
+        if($validate->fails()){
+            return response()->json([
+                'msg'=>'Se produjo un error en la validacion de la informacion.',
+                'statusCode'=>400
+            ]);
+        }
+
         $product = Product::find($id);
         $product->name = $request->name;
         $product->price = $request->price;
