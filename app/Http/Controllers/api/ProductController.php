@@ -4,6 +4,8 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\Product;
 
 class ProductController extends Controller
 {
@@ -12,7 +14,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = Product::all();
+        return json_encode(['products'=>$products]);
     }
 
     /**
@@ -20,7 +23,14 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $product = new Product();
+        $product->name = $request->name;
+        $product->price = $request->price;
+        $product->stock = $request->stock;
+        $product->category_id = $request->category_id;
+        $product->save();
+
+        return json_encode(['product'=>$product]);
     }
 
     /**
@@ -28,7 +38,13 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $product = Product::find($id);
+        $product = DB::table('produts')
+        ->orderBy('names')
+        ->orderBy('price')
+        ->orderBy('stock')
+        ->get();
+        return json_encode(['product'=>$product]);
     }
 
     /**
@@ -36,7 +52,14 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $product = Product::find($id);
+        $product->name = $request->name;
+        $product->price = $request->price;
+        $product->stock = $request->stock;
+        $product->categoria_id = $request->categoria_id;
+        $product->save();
+
+        return json_encode(['product'=>$product]);
     }
 
     /**
@@ -44,6 +67,9 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $product = Product::find($id);
+        $product->delete();
+        $products = Product::all();
+        return json_encode(['products'=>$products, 'success'=> true]);
     }
 }
